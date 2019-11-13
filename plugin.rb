@@ -58,7 +58,10 @@ after_initialize do
     def emit_segment_user_created
       Analytics.track(
         user_id: id,
-        event: 'Signed Up'
+        event: 'Discourse Signed Up',
+        properties: {
+          user_email: email
+        }
       )
     end
 
@@ -85,7 +88,8 @@ after_initialize do
           user_id: current_user.id,
           name: "#{controller_name}##{action_name}",
           properties: {
-            url: request.original_url
+            url: request.original_url,
+            user_email: current_user.email,
           },
           context: {
             ip: request.ip,
@@ -109,14 +113,15 @@ after_initialize do
     def emit_segment_post_created
       Analytics.track(
         user_id: user_id,
-        event: 'Post Created',
+        event: 'Discourse Post Created',
         properties: {
           topic_id: topic_id,
           post_number: post_number,
           created_at: created_at,
           since_topic_created: (created_at - topic.created_at).to_i,
           reply_to_post_number: reply_to_post_number,
-          internal: user.internal_user?
+          internal: user.internal_user?,
+          user_email: user.email,
         }
       )
     end
@@ -129,12 +134,13 @@ after_initialize do
     def emit_segment_topic_created
       Analytics.track(
         user_id: user_id,
-        event: 'Topic Created',
+        event: 'Discourse Topic Created',
         properties: {
           slug: slug,
           title: title,
           url: url,
-          internal: user.internal_user?
+          internal: user.internal_user?,
+          user_email: user.email,
         }
       )
     end
@@ -147,7 +153,7 @@ after_initialize do
     def emit_segment_topic_tagged
       Analytics.track(
         anonymous_id: -1,
-        event: 'Topic Tag Created',
+        event: 'Discourse Topic Tag Created',
         properties: {
           topic_id: topic_id,
           tag_name: tag.name
@@ -163,12 +169,13 @@ after_initialize do
     def emit_segment_post_liked
       Analytics.track(
         user_id: user_id,
-        event: 'Post Liked',
+        event: 'Discourse Post Liked',
         properties: {
           post_id: target_post_id,
           topic_id: target_topic_id,
           internal: user.internal_user?,
-          like_count: target_topic.like_count
+          like_count: target_topic.like_count,
+          user_email: user.email,
         }
       )
     end
