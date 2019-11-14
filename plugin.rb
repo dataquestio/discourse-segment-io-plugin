@@ -47,7 +47,8 @@ after_initialize do
           username: username,
           email: email,
           created_at: created_at,
-          internal: internal_user?
+          internal: internal_user?,
+          dq_user_id: single_sign_on_record.external_id
         },
         context: {
           ip: ip_address
@@ -61,6 +62,7 @@ after_initialize do
         event: 'Discourse Signed Up',
         properties: {
           user_email: email
+          dq_user_id: single_sign_on_record.external_id
         }
       )
     end
@@ -90,6 +92,7 @@ after_initialize do
           properties: {
             url: request.original_url,
             user_email: current_user.email,
+            dq_user_id: current_user.single_sign_on_record.external_id
           },
           context: {
             ip: request.ip,
@@ -122,6 +125,7 @@ after_initialize do
           reply_to_post_number: reply_to_post_number,
           internal: user.internal_user?,
           user_email: user.email,
+          dq_user_id: user.single_sign_on_record.external_id
         }
       )
     end
@@ -141,6 +145,7 @@ after_initialize do
           url: url,
           internal: user.internal_user?,
           user_email: user.email,
+          dq_user_id: user.single_sign_on_record.external_id
         }
       )
     end
@@ -176,6 +181,7 @@ after_initialize do
           internal: user.internal_user?,
           like_count: target_topic.like_count,
           user_email: user.email,
+          dq_user_id: user.single_sign_on_record.external_id
         }
       )
     end
