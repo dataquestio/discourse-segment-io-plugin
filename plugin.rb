@@ -61,7 +61,7 @@ after_initialize do
         user_id: id,
         event: 'Discourse Signed Up',
         properties: {
-          user_email: email
+          user_email: email,
           dq_user_id: single_sign_on_record.external_id
         }
       )
