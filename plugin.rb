@@ -48,7 +48,7 @@ after_initialize do
           email: email,
           created_at: created_at,
           internal: internal_user?,
-          dq_user_id: single_sign_on_record.external_id
+          dq_user_id: self.single_sign_on_record.external_id
         },
         context: {
           ip: ip_address
@@ -62,7 +62,7 @@ after_initialize do
         event: 'Discourse Signed Up',
         properties: {
           user_email: email,
-          dq_user_id: single_sign_on_record.external_id
+          dq_user_id: self.single_sign_on_record.external_id
         }
       )
     end
