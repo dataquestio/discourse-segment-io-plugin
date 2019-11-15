@@ -35,42 +35,43 @@ after_initialize do
   end
 
   require_dependency 'user'
-  class ::User
+  class ::SingleSignOnRecord
+    # In order to send the DQ user_id to segment, we need to
+    # send the segment events for user creation AFTER the SSO record
+    # is created not when the user is created. So, we emit the *identify*
+    # and *track sign up* events on SingleSignOnRecord not User.
     after_create :emit_segment_user_identify
     after_create :emit_segment_user_created
 
     def emit_segment_user_identify
+      user = self.user
       Analytics.identify(
-        user_id: id,
+        user_id: user.id,
         traits: {
-          name: name,
-          username: username,
-          email: email,
-          created_at: created_at,
-          internal: internal_user?,
-          dq_user_id: self.single_sign_on_record.external_id
+          name: user.name,
+          username: user.username,
+          email: user.email,
+          created_at: user.created_at,
+          dq_user_id: external_id
         },
         context: {
-          ip: ip_address
+          ip: user.ip_address
         }
       )
     end
 
     def emit_segment_user_created
+      user = self.user
       Analytics.track(
-        user_id: id,
+        user_id: user.id,
         event: 'Discourse Signed Up',
         properties: {
-          user_email: email,
-          dq_user_id: self.single_sign_on_record.external_id
+          user_email: user.email,
+          dq_user_id: external_id
         }
       )
     end
 
-    def internal_user?
-      return false if SiteSetting.segment_io_internal_domain.blank?
-      email.ends_with?(SiteSetting.segment_io_internal_domain)
-    end
   end
 
   require_dependency 'application_controller'
