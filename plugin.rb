@@ -124,7 +124,6 @@ after_initialize do
           created_at: created_at,
           since_topic_created: (created_at - topic.created_at).to_i,
           reply_to_post_number: reply_to_post_number,
-          internal: user.internal_user?,
           user_email: user.email,
           dq_user_id: user.single_sign_on_record.external_id
         }
@@ -144,7 +143,6 @@ after_initialize do
           slug: slug,
           title: title,
           url: url,
-          internal: user.internal_user?,
           user_email: user.email,
           dq_user_id: user.single_sign_on_record.external_id
         }
@@ -179,7 +177,6 @@ after_initialize do
         properties: {
           post_id: target_post_id,
           topic_id: target_topic_id,
-          internal: user.internal_user?,
           like_count: target_topic.like_count,
           user_email: user.email,
           dq_user_id: user.single_sign_on_record.external_id
