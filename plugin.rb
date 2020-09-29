@@ -92,8 +92,7 @@ after_initialize do
           name: "#{controller_name}##{action_name}",
           properties: {
             url: request.original_url,
-            user_email: current_user.email,
-            dq_user_id: current_user.single_sign_on_record.external_id
+            user_email: current_user.email
           },
           context: {
             ip: request.ip,
@@ -124,8 +123,7 @@ after_initialize do
           created_at: created_at,
           since_topic_created: (created_at - topic.created_at).to_i,
           reply_to_post_number: reply_to_post_number,
-          user_email: user.email,
-          dq_user_id: user.single_sign_on_record.external_id
+          user_email: user.email
         }
       )
     end
@@ -143,8 +141,7 @@ after_initialize do
           slug: slug,
           title: title,
           url: url,
-          user_email: user.email,
-          dq_user_id: user.single_sign_on_record.external_id
+          user_email: user.email
         }
       )
     end
@@ -178,8 +175,7 @@ after_initialize do
           post_id: target_post_id,
           topic_id: target_topic_id,
           like_count: target_topic.like_count,
-          user_email: user.email,
-          dq_user_id: user.single_sign_on_record.external_id
+          user_email: user.email
         }
       )
     end
